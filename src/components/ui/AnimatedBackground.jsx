@@ -1,95 +1,173 @@
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useRef, useState } from 'react';
+import { useTheme } from '../../context/ThemeContext';
 
 const AnimatedBackground = () => {
+  const canvasRef = useRef(null);
+  const { isDarkMode } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  useEffect(() => {
+    if (!mounted) return;
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let animationFrameId;
+    let particles = [];
+
+    // Mouse interaction
+    const mouse = {
+      x: null,
+      y: null,
+      radius: 150
+    };
+
+    const handleMouseMove = (event) => {
+      mouse.x = event.x;
+      mouse.y = event.y;
+    };
+
+    const handleMouseOut = () => {
+      mouse.x = undefined;
+      mouse.y = undefined;
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseout', handleMouseOut);
+
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      initParticles();
+    };
+
+    window.addEventListener('resize', resizeCanvas);
+
+    class Particle {
+      constructor(x, y, dx, dy, size) {
+        this.x = x;
+        this.y = y;
+        this.dx = dx;
+        this.dy = dy;
+        this.size = size;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+        ctx.fillStyle = isDarkMode ? 'rgba(14, 165, 233, 0.4)' : 'rgba(56, 189, 248, 0.6)';
+        ctx.fill();
+      }
+
+      update() {
+        // Bounce off edges
+        if (this.x > canvas.width || this.x < 0) this.dx = -this.dx;
+        if (this.y > canvas.height || this.y < 0) this.dy = -this.dy;
+
+        this.x += this.dx;
+        this.y += this.dy;
+
+        this.draw();
+      }
+    }
+
+    const initParticles = () => {
+      particles = [];
+      const numberOfParticles = (canvas.width * canvas.height) / 12000; // Responsive amount
+      for (let i = 0; i < numberOfParticles; i++) {
+        const size = Math.random() * 2 + 1;
+        const x = Math.random() * (canvas.width - size * 2 - size * 2) + size * 2;
+        const y = Math.random() * (canvas.height - size * 2 - size * 2) + size * 2;
+        const dx = (Math.random() - 0.5) * 1.5;
+        const dy = (Math.random() - 0.5) * 1.5;
+        particles.push(new Particle(x, y, dx, dy, size));
+      }
+    };
+
+    const animate = () => {
+      animationFrameId = requestAnimationFrame(animate);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+      }
+      connectParticles();
+    };
+
+    const connectParticles = () => {
+      let opacityValue = 1;
+      const lineColor = isDarkMode ? '14, 165, 233' : '148, 163, 184'; // Tech blue for dark mode, slate for light mode
+
+      for (let a = 0; a < particles.length; a++) {
+        for (let b = a; b < particles.length; b++) {
+          const dx = particles[a].x - particles[b].x;
+          const dy = particles[a].y - particles[b].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 110) {
+            opacityValue = 1 - distance / 110;
+            ctx.strokeStyle = `rgba(${lineColor}, ${opacityValue * 0.5})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(particles[a].x, particles[a].y);
+            ctx.lineTo(particles[b].x, particles[b].y);
+            ctx.stroke();
+          }
+        }
+
+        // Connect to mouse
+        if (mouse.x && mouse.y) {
+          const dxMouse = particles[a].x - mouse.x;
+          const dyMouse = particles[a].y - mouse.y;
+          const distanceMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+          
+          if (distanceMouse < mouse.radius) {
+            opacityValue = 1 - distanceMouse / mouse.radius;
+            ctx.strokeStyle = `rgba(${isDarkMode ? '56, 189, 248' : '100, 116, 139'}, ${opacityValue * 0.6})`;
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(particles[a].x, particles[a].y);
+            ctx.lineTo(mouse.x, mouse.y);
+            ctx.stroke();
+          }
+        }
+      }
+    };
+
+    resizeCanvas();
+    animate();
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseout', handleMouseOut);
+      window.removeEventListener('resize', resizeCanvas);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [mounted, isDarkMode]);
+
   if (!mounted) return null;
 
   return (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
-      {/* Base Background Color */}
+    <div className="fixed inset-0 pointer-events-none -z-10">
       <div className="absolute inset-0 bg-light-bg dark:bg-dark-bg transition-colors duration-500"></div>
       
-      {/* Subtle Grid Pattern */}
-      <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] dark:bg-[radial-gradient(#334155_1px,transparent_1px)] [background-size:24px_24px] opacity-30 dark:opacity-20 [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_10%,transparent_100%)]"></div>
-
-      {/* Floating Animated Orbs */}
-      <motion.div
-        animate={{
-          x: [0, 120, 0, -120, 0],
-          y: [0, -120, 100, -50, 0],
-          scale: [1, 1.2, 0.9, 1.1, 1],
-          rotate: [0, 90, 180, 270, 360]
-        }}
-        transition={{
-          duration: 25,
-          repeat: Infinity,
-          ease: "linear"
-        }}
-        className="absolute -top-[10%] -left-[10%] w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] bg-primary/30 dark:bg-primary/20 rounded-full blur-[100px] mix-blend-multiply dark:mix-blend-screen opacity-60 dark:opacity-40"
+      {/* Subtle glowing orbs in the background */}
+      <div className="absolute top-[20%] left-[10%] w-[40vw] h-[40vw] rounded-full bg-primary/20 dark:bg-primary/10 blur-[120px] mix-blend-multiply dark:mix-blend-screen opacity-50 pointer-events-none" />
+      <div className="absolute bottom-[20%] right-[10%] w-[35vw] h-[35vw] rounded-full bg-secondary/20 dark:bg-secondary/10 blur-[100px] mix-blend-multiply dark:mix-blend-screen opacity-50 pointer-events-none" />
+      
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 pointer-events-auto"
+        style={{ zIndex: 1 }}
       />
       
-      <motion.div
-        animate={{
-          x: [0, -150, 80, -100, 0],
-          y: [0, 150, -120, 60, 0],
-          scale: [1, 0.8, 1.3, 0.9, 1],
-          rotate: [360, 270, 180, 90, 0]
-        }}
-        transition={{
-          duration: 30,
-          repeat: Infinity,
-          ease: "linear"
-        }}
-        className="absolute -bottom-[10%] -right-[10%] w-[55vw] h-[55vw] max-w-[650px] max-h-[650px] bg-secondary/30 dark:bg-secondary/20 rounded-full blur-[100px] mix-blend-multiply dark:mix-blend-screen opacity-60 dark:opacity-40"
-      />
-      
-      <motion.div
-        animate={{
-          x: [0, 200, -150, 100, 0],
-          y: [0, -100, 150, -80, 0],
-          scale: [1, 1.1, 0.85, 1.15, 1],
-        }}
-        transition={{
-          duration: 35,
-          repeat: Infinity,
-          ease: "linear"
-        }}
-        className="absolute top-[30%] left-[30%] w-[45vw] h-[45vw] max-w-[500px] max-h-[500px] bg-blue-500/20 dark:bg-blue-600/10 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen opacity-50 dark:opacity-30"
-      />
-
-      {/* Floating Particles/Stars effect for depth */}
-      <div className="absolute inset-0 overflow-hidden">
-        {[...Array(15)].map((_, i) => (
-          <motion.div
-            key={i}
-            initial={{
-              x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
-              y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1000),
-              opacity: Math.random() * 0.5 + 0.1
-            }}
-            animate={{
-              y: [null, Math.random() * -100],
-              opacity: [null, Math.random() * 0.8 + 0.2, 0]
-            }}
-            transition={{
-              duration: Math.random() * 10 + 10,
-              repeat: Infinity,
-              ease: "linear"
-            }}
-            className="absolute w-1 h-1 bg-primary/40 dark:bg-primary/60 rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-          />
-        ))}
-      </div>
+      {/* Front mask to blend the canvas visually behind text if needed */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-light-bg/50 to-light-bg dark:via-dark-bg/50 dark:to-dark-bg pointer-events-none" style={{ zIndex: 2 }} />
     </div>
   );
 };

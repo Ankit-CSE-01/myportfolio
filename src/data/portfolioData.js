@@ -61,62 +61,51 @@ export const portfolioData = {
   experience: [
     {
       id: 1,
-      title: 'Complete Interview Preparation',
-      company: 'GeeksForGeeks',
-      duration: 'June - July, 2024',
+      title: 'Data Structures Algorithms',
+      company: 'CipherSchools',
+      duration: 'June 4 - July 15, 2025',
       type: 'SUMMER TRAINING',
+      tech: 'DSA, Problem Solving, Algorithms',
       points: [
-        'Learned essential DSA, system design, and core CS concepts tailored for coding interviews',
-        'Practiced a wide range of coding problems with step-by-step explanations and solutions',
-        'Gained insights into technical and behavioral interview strategies, including resume building and mock interviews',
-        'Developed a Sudoko Solver as a Project using the DSA skills learned in the course'
+        'Successfully completed 70 hours of intensive Data Structures & Algorithms training from CipherSchools',
+        'Studied at Lovely Professional University during the training period with Satisfactory performance assessment',
+        'Gained deep understanding of algorithmic problem-solving techniques and data structure implementations',
+        'Certificate ID: CSW2025-13099, issued by Anurag Mishra, Founder CipherSchools'
       ]
     },
     {
       id: 2,
-      title: 'Smart India Hackathon',
-      company: 'LPU',
-      duration: 'August, 2024',
+      title: 'BinaryBlitz Web Hackathon',
+      company: 'Coding Ninjas LPU',
+      duration: 'March 30, 2024',
       type: 'HACKATHON',
-      tech: 'HTML, CSS, JavaScript, ReactJs, NodeJs, MongoDB',
+      tech: 'HTML, CSS, JavaScript, Web Design',
       points: [
-        'Built an intuitive platform for farmers to list and showcase their products with images',
-        'Differentiated accounts of farmers and consumers providing them different functionality',
-        'Facilitated direct transactions between farmers and consumers for a seamless purchasing experience'
-      ]
-    },
-    {
-      id: 3,
-      title: 'IOT Devices',
-      company: 'LPU',
-      duration: 'March, 2023',
-      type: 'WORKSHOP',
-      tech: 'C, Ardiuno',
-      points: [
-        'Designed an automated highway lighting system for efficient energy usage',
-        'Implemented Arduino to control and manage the lighting mechanism',
-        'Integrated motion sensors and counters to activate lights based on vehicle movement'
+        'Actively participated in the BinaryBlitz Web Hackathon organized by Coding Ninjas LPU',
+        'Demonstrated exceptional skills and dedication in web development and web design',
+        'Exhibited outstanding problem-solving abilities and innovative thinking throughout the event',
+        'Contributed significantly to the team\'s efforts with creative and functional solutions'
       ]
     }
   ],
   projects: [
     {
       id: 1,
-      title: 'Farmers Market Platform',
-      description: 'Built during Smart India Hackathon. An intuitive platform for farmers to list and showcase their products directly to consumers.',
-      image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80',
-      tech: ['React', 'Node.js', 'MongoDB', 'Express'],
-      github: '#',
-      live: '#'
+      title: 'TravelEase',
+      description: 'A comprehensive travel companion app offering services like hotel booking, SOS emergency assistance, and local vehicle repairing services.',
+      image: '/projects/travelease.png',
+      tech: ['React', 'Node.js', 'Vercel'],
+      github: 'https://github.com/Ankit-CSE-01/TravelEase.git',
+      live: 'https://travel-ease-rust.vercel.app/'
     },
     {
       id: 2,
-      title: 'Sudoku Solver',
-      description: 'An algorithmic project developed during training to solve any given Sudoku puzzle efficiently using backtracking.',
-      image: 'https://images.unsplash.com/photo-1580210452377-5264eb78d7e0?auto=format&fit=crop&q=80',
-      tech: ['Java', 'Algorithms'],
-      github: '#',
-      live: '#'
+      title: 'MediQure',
+      description: 'An intelligent, all-in-one healthcare companion featuring an AI-powered diagnostic chatbot (LLaMA 3.3 70B), a real-time hospital locator with route navigation, and a comprehensive first aid reference guide — all wrapped in a beautiful, responsive interface.',
+      image: '/projects/mediqure.png',
+      tech: ['HTML5', 'Tailwind CSS', 'PHP', 'Leaflet.js', 'Docker'],
+      github: 'https://github.com/Ankit-CSE-01/MediQure.git',
+      live: 'https://mediqure.onrender.com/hos/index.html'
     }
   ]
 };

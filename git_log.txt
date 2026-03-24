@@ -1,0 +1,11 @@
+commit 05aafbd082b8e698f73d54574b4f0a7fb654ee52
+Author: Ankit <73ankitkrsingh@gmail.com>
+Date:   Tue Mar 24 17:03:05 2026 +0530
+
+    Fix: Remove node_modules from repository to fix Vercel deployment
+
+commit 744bad9650bf15cdfa837638c5dde6267bfd83ea
+Author: Ankit <73ankitkrsingh@gmail.com>
+Date:   Tue Mar 24 14:28:55 2026 +0530
+
+    Initial commit of portfolio website
