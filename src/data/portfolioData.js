@@ -20,8 +20,7 @@ export const portfolioData = {
       institution: 'Lovely Professional University',
       location: 'Punjab, India',
       degree: 'Bachelor of Technology - Computer Science and Engineering',
-      duration: 'Since August 2023',
-      score: 'CGPA: 5.76*'
+      duration: 'Since August 2023'
     },
     {
       id: 2,
