@@ -75,8 +75,8 @@ Open a Pull Request
 📧 Contact
 Ankit Raj
 GitHub: Ankit-CSE-01 GitHub
-LinkedIn: Add your LinkedIn profile link
-Email: Add your professional email
+LinkedIn: https://www.linkedin.com/in/ankit-raj-006667218/
+Email: 73ankitkrsingh@gmail.com
 ⭐ Support
 
 If you like this project, consider giving it a ⭐ on GitHub Repository
